@@ -11,7 +11,6 @@ import org.vean.platform.client.service.IRpcService;
 import org.vean.platform.common.common.HttpResult;
 import org.vean.platform.common.exception.ErrorEnum;
 import org.vean.platform.web.constant.CommonUtils;
-import org.vean.platform.web.constant.UrlConstant;
 import org.vean.platform.web.execute.CommonExecute;
 import org.vean.platform.web.execute.CommonExecutor;
 import org.vean.platform.web.param.BaseParam;
@@ -19,13 +18,13 @@ import org.vean.platform.web.param.BaseParam;
 import com.mysql.jdbc.StringUtils;
 
 @Controller
-@RequestMapping(value = UrlConstant.TEST_PREFIX)
+@RequestMapping(value = "/test")
 public class TestSecureHttpInvokerController {
 
     @Resource(name="consumeRpcService")
     IRpcService rpcService;
 
-    @RequestMapping(value = UrlConstant.TEST_SECURE_HTTP_INVOKER, produces = CommonUtils.CONTENT_TYPE)
+    @RequestMapping(value = "/testSecureHttpInvoker", produces = CommonUtils.CONTENT_TYPE)
     @ResponseBody
     public String testSecureHttpInvoker(final HttpServletRequest request, final HttpServletResponse response) {
         return CommonExecutor.execute(request, response, BaseParam.class, new CommonExecute<BaseParam>() {

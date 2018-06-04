@@ -17,15 +17,15 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         if (e instanceof BusinessException) {
-            System.out.println("this is a businessException");
+            System.out.println("业务处理异常");
             BusinessException businessException = (BusinessException) e;
             putErrorEnumToResponse(businessException.getErrorEnum(), httpServletResponse);
         } else if (e instanceof SystemException) {
-            System.out.println("this is a systemException");
+            System.out.println("系统异常");
             SystemException systemException = (SystemException) e;
             putErrorEnumToResponse(systemException.getErrorEnum(), httpServletResponse);
         } else {
-            System.out.println("this is a unknownException");
+            System.out.println("未知异常");
             putErrorEnumToResponse(ErrorEnum.UNKNOWN_EXCEPTION, httpServletResponse);
         }
         return null;

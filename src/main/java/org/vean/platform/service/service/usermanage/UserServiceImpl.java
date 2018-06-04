@@ -26,7 +26,6 @@ import org.vean.platform.service.datasourceswitch.impl.DataSourceHolder;
 @Service("userService")
 public class UserServiceImpl implements IUserService {
 
-
     @Resource(name = "userDao")
     private UserDao userDao;
 
