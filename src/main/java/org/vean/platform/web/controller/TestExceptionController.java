@@ -32,9 +32,9 @@ public class TestExceptionController {
     @RequestMapping(value = UrlConstant.TEST_CONTROLLER_EXCEPTION, produces = CommonUtils.CONTENT_TYPE)
     @ResponseBody
     public String getUserByAccount(HttpServletRequest request, HttpServletResponse response) {
-        return CommonExecutor.execute(request, response, BaseParam.class, new CommonExecute() {
+        return CommonExecutor.execute(request, response, BaseParam.class, new CommonExecute<BaseParam>() {
             @Override
-            public HttpResult execute(BaseParam param) {
+            public HttpResult<BaseParam> execute(BaseParam param) {
                 throw new SystemException(ErrorEnum.UNKNOWN_EXCEPTION);
             }
         });
@@ -45,7 +45,7 @@ public class TestExceptionController {
     public String testTransaction(HttpServletRequest request, HttpServletResponse response) {
         return CommonExecutor.execute(request, response, CreateUserParam.class, new CommonExecute<CreateUserParam>() {
             @Override
-            public HttpResult execute(CreateUserParam param) {
+            public HttpResult<Boolean> execute(CreateUserParam param) {
                 RoleEnum roleEnum = RoleEnum.getRoleByStatus(param.getRole());
                 if (roleEnum == null)
                     throw new BusinessException(ErrorEnum.PARAM_IS_INVALID);
@@ -65,7 +65,7 @@ public class TestExceptionController {
     public String testMultiDataSource(HttpServletRequest request, HttpServletResponse response) {
         return CommonExecutor.execute(request, response, TestMultiDataSourceParam.class, new CommonExecute<TestMultiDataSourceParam>() {
             @Override
-            public HttpResult execute(TestMultiDataSourceParam param) {
+            public HttpResult<Boolean> execute(TestMultiDataSourceParam param) {
                 RoleEnum roleEnum = RoleEnum.getRoleByStatus(param.getRole());
                 if (roleEnum == null)
                     throw new BusinessException(ErrorEnum.PARAM_IS_INVALID);

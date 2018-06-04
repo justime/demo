@@ -28,9 +28,8 @@ public class UserController {
     public String getUserByAccount(HttpServletRequest request, HttpServletResponse response) {
         return CommonExecutor.execute(request, response, GetUserByAccountParam.class, new CommonExecute<GetUserByAccountParam>() {
             @Override
-            public HttpResult execute(GetUserByAccountParam param) {
-                HttpResult<UserDTO> result = userService.getUserByAccount(param.getAccount());
-                return result;
+            public HttpResult<UserDTO> execute(GetUserByAccountParam param) {
+            	return userService.getUserByAccount(param.getAccount());
             }
         });
     }

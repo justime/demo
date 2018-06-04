@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class CommonExecutor {
-    public static String execute(HttpServletRequest request, HttpServletResponse response, Class<? extends BaseParam> paramClass, CommonExecute commonExecute) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static String execute(HttpServletRequest request, HttpServletResponse response, Class<? extends BaseParam> paramClass, CommonExecute commonExecute) {
         //根据paramClass的原信息检查参数的是否存在以及各式是否正确
         BaseParam baseParam = null;
         try {
