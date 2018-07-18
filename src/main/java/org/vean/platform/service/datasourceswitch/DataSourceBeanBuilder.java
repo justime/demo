@@ -1,5 +1,7 @@
 package org.vean.platform.service.datasourceswitch;
 
+import org.vean.platform.dao.dataobject.DataSourceDO;
+
 public class DataSourceBeanBuilder {
 	private static final String URL_FORMATTER = "jdbc:mysql://%s:%s/%s?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;failOverReadOnly=false";
 	private String driverClassName = "com.mysql.jdbc.Driver";
@@ -12,14 +14,13 @@ public class DataSourceBeanBuilder {
 	private String validationQuery = "select 1";
 	private boolean testOnBorrow = true;
 
-	public DataSourceBeanBuilder(String beanName, String databaseIp, String databasePort, String databaseName,
-			String username, String password) {
-		this.beanName = beanName;
-		this.databaseIp = databaseIp;
-		this.databasePort = databasePort;
-		this.databaseName = databaseName;
-		this.username = username;
-		this.password = password;
+	public DataSourceBeanBuilder(DataSourceDO dataSourceDO) {
+		this.beanName = dataSourceDO.getDatasourceName()+dataSourceDO.getDatabaseIp();
+		this.databaseIp = dataSourceDO.getDatabaseIp();
+		this.databasePort = dataSourceDO.getDatabasePort();
+		this.databaseName = dataSourceDO.getDatabaseName();
+		this.username = dataSourceDO.getUsername();
+		this.password = dataSourceDO.getPassword();
 	}
 
 	public DataSourceBeanBuilder driverClassName(String value) {

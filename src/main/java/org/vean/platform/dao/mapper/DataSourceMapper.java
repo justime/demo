@@ -7,5 +7,7 @@ import org.vean.platform.dao.dataobject.DataSourceDO;
 public interface DataSourceMapper {
 
     List<DataSourceDO> getAllDataSources();
+    
+    DataSourceDO queryByDatasourceName(String datasourceName);
 
 }

@@ -23,5 +23,11 @@
 		<include refid="select-param-column" />
 		FROM other_datasource_meta
 	</select>
+	
+	<select id="queryByDatasourceName" resultMap="RM-DataSourceDO">
+		SELECT
+		<include refid="select-param-column" />
+		FROM other_datasource_meta WHERE datasource_name = #{datasourceName}
+	</select>
 
 </mapper>

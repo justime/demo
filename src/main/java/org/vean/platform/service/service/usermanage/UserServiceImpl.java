@@ -138,26 +138,30 @@ public class UserServiceImpl implements IUserService {
 
         UserDO userDO = UserConvent.conventToUserDO(userCreateReqDTO);
         //先向默认数据源插入
-        /*if (!userDao.createUser(userDO)) {
+       /* if (!userDao.createUser(userDO)) {
             throw new BusinessException(ErrorEnum.TEST_MULTI_DATASOURCE_EXCEPTION);
         }*/
 
         //再向起他数据源插入
-        List<DataSourceDO> dataSourceDOList = this.dataSourceDao.query();
+        /*List<DataSourceDO> dataSourceDOList = this.dataSourceDao.query();
         for (DataSourceDO dataSourceDO : dataSourceDOList) {
-            DataSourceBeanBuilder builder = new DataSourceBeanBuilder(
-            		dataSourceDO.getDatasourceName()+dataSourceDO.getDatabaseIp(),
-                    dataSourceDO.getDatabaseIp(),
-                    dataSourceDO.getDatabasePort(),
-                    dataSourceDO.getDatabaseName(),
-                    dataSourceDO.getUsername(),
-                    dataSourceDO.getPassword());
+            DataSourceBeanBuilder builder = new DataSourceBeanBuilder(DataSourceDO);
             DataSourceHolder.setDataSource(builder);
             if (!userDao.createUser(userDO)) {
                 throw new BusinessException(ErrorEnum.TEST_MULTI_DATASOURCE_EXCEPTION);
             }
             DataSourceHolder.clearDataSource();
+        }*/
+        
+        // 向用户库插入业务数据     sct_workflow 为当前登陆用户对应的
+        DataSourceDO dataSourceDO = this.dataSourceDao.queryByDatasourceName("sct_workflow");
+        
+        DataSourceBeanBuilder builder = new DataSourceBeanBuilder(dataSourceDO);
+        DataSourceHolder.setDataSource(builder);
+        if (!userDao.createUser(userDO)) {
+            throw new BusinessException(ErrorEnum.TEST_MULTI_DATASOURCE_EXCEPTION);
         }
+        DataSourceHolder.clearDataSource();
 
         return HttpResult.successResult(Boolean.TRUE);
     }

@@ -1,6 +1,11 @@
 package org.vean.platform.web.exceptionhandler;
 
-import com.alibaba.fastjson.JSON;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.vean.platform.common.common.HttpResult;
@@ -8,10 +13,7 @@ import org.vean.platform.common.exception.BusinessException;
 import org.vean.platform.common.exception.ErrorEnum;
 import org.vean.platform.common.exception.SystemException;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import com.alibaba.fastjson.JSON;
 
 public class DefaultExceptionHandler implements HandlerExceptionResolver {
     @Override
@@ -35,11 +37,11 @@ public class DefaultExceptionHandler implements HandlerExceptionResolver {
         String result = JSON.toJSONString(HttpResult.failedResult(errorEnum));
         response.setContentType("application/json;charset=utf-8");
         try {
-            ServletOutputStream servletOutputStream = response.getOutputStream();
-            servletOutputStream.print(result);
-            servletOutputStream.flush();
-            if (servletOutputStream != null)
-                servletOutputStream.close();
+            PrintWriter out = response.getWriter();
+            out.print(result);
+            out.flush();
+            if (out != null)
+            	out.close();
         } catch (IOException e) {
             System.out.println("put error msg to response exception");
             e.printStackTrace();

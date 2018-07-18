@@ -16,4 +16,9 @@ public class DataSourceDao {
         return dataSourceMapper.getAllDataSources();
 
     }
+    
+    public DataSourceDO queryByDatasourceName(String datasourceName) {
+        return dataSourceMapper.queryByDatasourceName(datasourceName);
+
+    }
 }
