@@ -3,7 +3,7 @@ package org.vean.platform.service.datasourceswitch;
 import org.vean.platform.dao.dataobject.DataSourceDO;
 
 public class DataSourceBeanBuilder {
-	private static final String URL_FORMATTER = "jdbc:mysql://%s:%s/%s?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;failOverReadOnly=false";
+	private static final String URL_FORMATTER = "jdbc:mysql://%s:%s/%s?useSSL=true&useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;failOverReadOnly=false";
 	private String driverClassName = "com.mysql.jdbc.Driver";
 	private final String beanName;// Bean统一交给Spring管理，所以beanName必须唯一
 	private final String databaseIp;
