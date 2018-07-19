@@ -1,6 +1,6 @@
 package org.vean.platform.service.datasourceswitch.impl;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -48,7 +48,7 @@ final class DynamicDataSource extends AbstractRoutingDataSource implements Appli
 		// 在spring容器中创建并且声明bean
 		ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
 		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
-		BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(BasicDataSource.class);
+		BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(DruidDataSource.class);
 		// 将dataSourceBean中的属性值赋给目标bean
 		Map<String, Object> properties = getPropertyKeyValues(DataSourceBean.class, dataSourceBean);
 		for (Map.Entry<String, Object> entry : properties.entrySet()) {

@@ -1,38 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean id="defaultDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${db_driver}" />
+		<property name="url" value="${db_url}" />
+		<property name="username" value="${db_user}" />
+		<property name="password" value="${db_pass}" />
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="10" />
+		<property name="minIdle" value="10" />
+		<property name="maxActive" value="300" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="1800" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<!-- mysql SELECT 'x' Oracle: SELECT 1 FROM DUAL -->
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<!-- 如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。分库分表较多的数据库，建议配置为false。 -->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="20" />
+		<!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 wall=防火墙 -->
+		<property name="filters" value="stat" />
+	</bean>
 
 
-    <bean id="defaultDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-          p:driverClassName="${db_driver}"
-          p:url="${db_url}"
-          p:username="${db_user}"
-          p:password="${db_pass}"
-          p:validationQuery="select 1"
-          p:testOnBorrow="true"/>
+	<!--动态数据源相关 -->
+	<bean id="dynamicDataSource" class="org.vean.platform.service.datasourceswitch.impl.DynamicDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="defaultDataSource" value-ref="defaultDataSource" />
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="defaultDataSource" />
+	</bean>
 
-    <!--动态数据源相关-->
-    <bean id="dynamicDataSource" class="org.vean.platform.service.datasourceswitch.impl.DynamicDataSource">
-        <property name="targetDataSources">
-            <map key-type="java.lang.String">
-                <entry key="defaultDataSource" value-ref="defaultDataSource"/>
-            </map>
-        </property>
-        <property name="defaultTargetDataSource" ref="defaultDataSource"/>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dynamicDataSource" />
+		<property name="typeAliasesPackage" value="org.vean.platform.dao.dataobject" />
+		<!--指定mybatis总配置文件，订制的environment在spring容器中不在生效 
+		<property name="configLocation">
+			<value>classpath:mybatis-config.xml</value>
+		</property>-->
+
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:mapper/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
     </bean>
 
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
-          p:dataSource-ref="dynamicDataSource"
-          p:typeAliasesPackage="org.vean.platform.dao.dataobject"
-          p:mapperLocations="classpath:mapper/*.xml"/>
-
-    <!--事务相关-->
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-          p:dataSource-ref="dynamicDataSource"/>
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <import resource="classpath:dao-mapper.xml"/>
+	<!--事务相关 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dynamicDataSource" />
+	</bean>
+		
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	<import resource="classpath:dao-mapper.xml" />
 </beans>
