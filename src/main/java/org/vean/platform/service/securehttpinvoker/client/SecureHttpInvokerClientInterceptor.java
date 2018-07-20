@@ -8,7 +8,7 @@ import java.util.Map;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.remoting.RemoteInvocationFailureException;
-import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor;
+import org.springframework.remoting.httpinvoker.HttpComponentsHttpInvokerRequestExecutor;
 import org.springframework.remoting.httpinvoker.HttpInvokerClientInterceptor;
 import org.springframework.remoting.httpinvoker.HttpInvokerRequestExecutor;
 import org.springframework.remoting.support.RemoteInvocation;
@@ -38,7 +38,7 @@ public class SecureHttpInvokerClientInterceptor extends HttpInvokerClientInterce
         HttpInvokerRequestExecutor httpInvokerRequestExecutor = getParentHttpInvokerRequestExecutor();
         if (httpInvokerRequestExecutor == null) {
 //            SimpleHttpInvokerRequestExecutor executor=new SimpleHttpInvokerRequestExecutor();
-            CommonsHttpInvokerRequestExecutor executor = new CommonsHttpInvokerRequestExecutor();
+        	HttpComponentsHttpInvokerRequestExecutor executor = new HttpComponentsHttpInvokerRequestExecutor();
             executor.setBeanClassLoader(getBeanClassLoader());
             httpInvokerRequestExecutor = executor;
         }
