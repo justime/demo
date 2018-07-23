@@ -15,24 +15,38 @@ import org.vean.platform.common.exception.SystemException;
 
 import com.alibaba.fastjson.JSON;
 
+/**
+ * 异常信息输出
+ * @author Vean
+ *
+ */
 public class DefaultExceptionHandler implements HandlerExceptionResolver {
-    @Override
+    
+	/**
+	 * 输出到控制台
+	 */
+	@Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
         if (e instanceof BusinessException) {
-            System.out.println("业务处理异常");
             BusinessException businessException = (BusinessException) e;
             putErrorEnumToResponse(businessException.getErrorEnum(), httpServletResponse);
+            System.out.println("业务处理异常：" + businessException.getErrorEnum());
         } else if (e instanceof SystemException) {
-            System.out.println("系统异常");
             SystemException systemException = (SystemException) e;
             putErrorEnumToResponse(systemException.getErrorEnum(), httpServletResponse);
+            System.out.println("系统异常：" + systemException.getErrorEnum());
         } else {
-            System.out.println("未知异常");
+            System.out.println("未知异常" + ErrorEnum.UNKNOWN_EXCEPTION);
             putErrorEnumToResponse(ErrorEnum.UNKNOWN_EXCEPTION, httpServletResponse);
         }
         return null;
     }
-
+    
+    /**
+     * 输出到页面
+     * @param errorEnum
+     * @param response
+     */
     private static void putErrorEnumToResponse(ErrorEnum errorEnum, HttpServletResponse response) {
         String result = JSON.toJSONString(HttpResult.failedResult(errorEnum));
         response.setContentType("application/json;charset=utf-8");

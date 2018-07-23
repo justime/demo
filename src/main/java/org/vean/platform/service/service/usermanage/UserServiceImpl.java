@@ -154,6 +154,16 @@ public class UserServiceImpl implements IUserService {
         }*/
         
         // 向用户库插入业务数据     sct_workflow 为当前登陆用户对应的
+        DataSourceDO dataSourceDO1 = this.dataSourceDao.queryByDatasourceName("fzb_workflow");
+        
+        DataSourceBeanBuilder builder1 = new DataSourceBeanBuilder(dataSourceDO1);
+        DataSourceHolder.setDataSource(builder1);
+        if (!userDao.createUser(userDO)) {
+            throw new BusinessException(ErrorEnum.TEST_MULTI_DATASOURCE_EXCEPTION);
+        }
+        DataSourceHolder.clearDataSource();
+        
+        
         DataSourceDO dataSourceDO = this.dataSourceDao.queryByDatasourceName("sct_workflow");
         
         DataSourceBeanBuilder builder = new DataSourceBeanBuilder(dataSourceDO);

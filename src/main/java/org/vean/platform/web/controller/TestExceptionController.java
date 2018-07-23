@@ -21,13 +21,24 @@ import org.vean.platform.web.param.BaseParam;
 import org.vean.platform.web.param.CreateUserParam;
 import org.vean.platform.web.param.TestMultiDataSourceParam;
 
+/**
+ * 测试类
+ * @author Vean
+ *
+ */
 @Controller
 @RequestMapping(value = "/test")
 public class TestExceptionController {
 
     @Resource(name = "userService")
     IUserService userService;
-
+    
+    /**
+     * 测试异常
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/testControllerException", produces = CommonUtils.CONTENT_TYPE)
     @ResponseBody
     public String getUserByAccount(HttpServletRequest request, HttpServletResponse response) {
@@ -38,7 +49,13 @@ public class TestExceptionController {
             }
         });
     }
-
+    
+    /**
+     * 测试事务
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/testTransaction", produces = CommonUtils.CONTENT_TYPE)
     @ResponseBody
     public String testTransaction(HttpServletRequest request, HttpServletResponse response) {
@@ -58,7 +75,13 @@ public class TestExceptionController {
             }
         });
     }
-
+    
+    /**
+     * 测试租户数据源
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/testMultiDataSource", produces = CommonUtils.CONTENT_TYPE)
     @ResponseBody
     public String testMultiDataSource(HttpServletRequest request, HttpServletResponse response) {
